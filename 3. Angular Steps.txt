@@ -1,0 +1,138 @@
+Visual Studio Code
+
+File -> Open Folder -> Angular2024 (C -> Vinod -> Angular2024)
+
+New Terminal
+
+ng new bedrock-text-processing-app -> Say y for routing & select CSS for styling.
+
+cd bedrock-text-processing-app
+
+Note that under bedrock-text-processing-app, there will be src -> app -> app.component.ts, app.component.html, app.component.css, app.module.ts, app-routing.module.ts etc.
+
+ng serve -o
+
+You will see the default Angular page now
+
+Remove everything except <router-outlet></router-outlet> in app.component.html & add <div class="container"></div>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+You will see an empty page now
+
+Ctrl+C to stop the service
+
+==========================================
+
+ng generate module home
+
+ng generate component home --module=home
+
+Under bedrock-text-processing-app -> src -> app -> home -> home.component.ts, home.component.html, home.component.css, home.module.ts etc will be created
+
+This component, as per our design, should have username / password / login button.
+
+Then update app.module.ts -> import required modules like HomeModule, HttpClientModule, FormsModule, ReactiveFormsModule on top of existing ones
+
+Then update app-routing.module.ts -> add path - route. for ex: path: "", component: HomeComponent
+
+Then update home.module.ts to have Forms related modules so that form can be built in home component
+
+Then update home.component.html with the form code in html - this is the login page for the app
+
+Then update home.component.ts with onInit and onSubmit code that processes the login form details
+
+Make CSS changes for styling:
+
+npm install bootstrap@5.3
+
+In styles.css, add @import "~bootstrap/dist/css/bootstrap.min.css"
+
+Ensure Login page is working as expected
+
+================================================
+
+ng generate module options
+
+This module can have various Gen AI options - one componet for text processing, one for image processing etc.
+
+ng generate component textProcessor --module=options
+
+This component should have the "prompt" text, needed to invoke the text processor Gen AI foundational model
+
+Add this module in app.module.ts
+
+Then update app-routing.module.ts -> add path - route. for ex: path: "textProcessor", component: TextProcessorComponent
+
+Then update options.module.ts to have Forms related modules so that form can be built in text processor component
+
+(Note: If you dont do above step, you will get the error - Can't bind to 'formGroup' since it isn't a known property of 'form')
+
+Then, in home.component.ts, in the OnSubmit() method, route to above path after successful login
+
+Verify at this point that you are able to navigate successfully to the other page / module-component after login
+
+Now, add the form in text-processor.component.html that will accept the prompt
+
+Add the corresponding ngOnInit and onSubmit methods in text-processor.component.ts - onSubmit() is blank initially
+
+At this point - verify this page display / works as expected 
+
+Now, the onSubmit() method should invoke the API - so time to hook up from-end with API
+
+=================================================
+
+ng generate service options/bedrock-text-processing-service
+
+ng generate interface models/bedrock-text-processing-model
+
+Update the bedrock text processing model - bedrock-text-processing-model.ts - with the fields from the above form / Frontend. 
+
+Now time to update the bedrock-text-processing-service.service.ts.
+Before that, in AWS Console, make sure to enable CORS in the API and copy the API get URL into bedrock-text-processing-service.service.ts.
+Add the getTextResult method that uses the HttpClient get method to invoke the AWS API url in the required format.
+
+Update text-processor.component.ts - onSubmit() method now to invoke the getTextResult method created in the above service
+Copy the result in a place-holder variable
+Use this variable in text-processor.component.html so that the result can be displayed in the front-end to the user
+
+======================================================
+
+
+================================================ deploy the app / front-end in S3 for public access ==============================================
+
+Now time to host the web app publicly.
+
+In AWS Console, Create an S3 bucket. Uncheck "Block Public Access". Edit the Bucket Policy and put in: 
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<bucket-name>/*"
+        }
+    ]
+}
+
+Enable static web hosting.
+
+Go back to your local machine where the angular app was built. Execute ng-build:
+C:\Vinod\Angular2024\bedrock-text-processing-app>ng build
+
+dist folder should get created in C:\Vinod\Angular2024\bedrock-text-processing-app
+
+Copy the files under "dist" into S3 bucket.
+
+Copy the bucket website endpoint into the browser and verify the behaviour of the app is the same as during local testing.
+
+Note: Remember to disable the static web hosting, enable "Block Public Access" and remove the bucket policy to ensure no one is able to misuse your project.
+Each time a Bedrock call is made, there is a cost involved.
+
+
+

@@ -1,0 +1,9 @@
+The improvement in the Angular part over 1. Image Generation is that, this application has 2 pages - a home page where users can login and after successful login, they are taken to the text processing page.
+
+Also, there are 2 modules here, even though both the above pages could be placed in a single module.This modularization is done from a best standards perspective.
+a. home module that has the Home Component for login processing
+b. options module that has the Text Processing Component for the actual Gen AI interaction - this module can have other components as well like an Image Generation Component etc
+
+What can be improved ?
+The login page is dummy now - it will accept any text / password.
+Can make this a real authentication page.

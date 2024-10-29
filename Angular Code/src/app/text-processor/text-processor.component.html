@@ -1,0 +1,21 @@
+<form [formGroup] = "textProcessorForm" (ngSubmit) = "onSubmit()">
+
+
+    <div class="row mb-3">
+        <div class="col">
+            <label class="form-label">Prompt:</label>
+            <input class="form-control" type="text" formControlName="prompt">
+            <small class="text-danger" *ngIf="textProcessorForm.get('prompt')?.invalid && textProcessorForm.get('prompt')?.touched">
+                Please enter a prompt value
+            </small>
+
+        </div>
+</div>
+
+<button class="btn btn-primary" tyep="submit" [disabled]="textProcessorForm.invalid">Submit</button>
+
+</form>
+
+<br>
+
+{{returnText}}

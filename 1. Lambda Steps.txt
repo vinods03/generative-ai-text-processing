@@ -1,0 +1,10 @@
+Create lambda function - bedrockTextSummarizationFn.py - that invokes the Cohere text processing model.
+
+The response which is a streaming body is converted into a python object and then required text is retrieved.
+
+Test the lambda function by configuring the below key-value pair as a Test event:
+{
+  "prompt": "who is vinod"
+}
+
+Ensure lambda function has bedrock access.
